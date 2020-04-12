@@ -1,8 +1,8 @@
 # The binary to build (just the basename).
-MODULE := blueprint
+MODULE := tableocr
 
 # Where to push the docker image.
-REGISTRY ?= docker.pkg.github.com/martinheinz/python-project-blueprint
+REGISTRY ?= docker.pkg.github.com/sanjevshakya/table-ocr
 
 IMAGE := $(REGISTRY)/$(MODULE)
 
@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 run:
-	@python -m $(MODULE)
+	@python3 -m $(MODULE)
 
 test:
 	@pytest
