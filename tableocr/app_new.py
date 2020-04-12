@@ -1,11 +1,11 @@
 """ Main Flask App """
 import os
-import cv2
 import time
+import cv2
 from pytesseract import image_to_string
-import util.preprocessing as preprocessing
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, make_response, redirect
+from flask import Flask, render_template, request, redirect
+import util.preprocessing as preprocessing
 
 app = Flask(__name__)
 
@@ -64,8 +64,8 @@ def display_process():
             ),
             file_location=file_location,
         )
-    else:
-        return redirect("/")
+
+    return redirect("/")
 
 
 @app.route("/extract", methods=["POST", "GET"])
