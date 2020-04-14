@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath(".."))
 
 from clint.arguments import Args
 from clint.textui import puts, colored, indent
-from preprocessing import preprocess
+from preprocessing import preprocess, binarize
 
 args = Args()
 
@@ -26,6 +26,8 @@ if __name__ == "__main__":
                 puts(colored.blue("Usage:"))
                 puts(colored.blue("--preprocess <URL of image>"))
                 puts(colored.blue("--preprocess <URL of image> -o <Output path>"))
+                puts(colored.blue("--binarize <URL of image>"))
+                puts(colored.blue("--binarize <URL of image> -o <Output path>"))
 
         elif args.flags[0] == "--preprocess" and args.files:
             img_src = args.files[0]
@@ -38,6 +40,19 @@ if __name__ == "__main__":
                 cv2.imwrite(str(dict(args.grouped).get("-o")[0]), img)
             else:
                 cv2.imshow("Processed", img)
+                cv2.waitKey()
+
+        elif args.flags[0] == "--binarize" and args.files:
+            img_src = args.files[0]
+            with indent(4, quote=" > "):
+                puts(colored.blue("Binarizing image " + str(img_src)))
+            img = cv2.imread(img_src)
+            img = binarize(img)
+
+            if dict(args.grouped).get("-o"):
+                cv2.imwrite(str(dict(args.grouped).get("-o")[0]), img)
+            else:
+                cv2.imshow("Binarized", img)
                 cv2.waitKey()
 
         else:
