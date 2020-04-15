@@ -13,7 +13,10 @@ def get_contours(img):
     CANNY = 84
     HOUGH = 25
     orig = img
-    img = cv2.cvtColor(orig, cv2.COLOR_BGR2GRAY)
+    try:
+        img = cv2.cvtColor(orig, cv2.COLOR_BGR2GRAY)
+    except:
+        pass
     ksize = (3, 3)
     cv2.GaussianBlur(img, ksize, 0, img)
     # this is to recognize white on white
