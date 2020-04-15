@@ -38,12 +38,20 @@ if __name__ == "__main__":
         with indent(4, quote=" > "):
             puts(colored.red("No argument passed. Use --help for help."))
     else:
-        puts(colored.green(str(args)))
+        # puts(colored.green(str(args)))
 
         if args.flags[0] == "--help":
-            with indent(4, quote=" > "):
-                puts(colored.blue("Welcome to OCR CLI tool"))
+            with indent(4, quote=" { "):
+                puts(colored.green("##########@@@@@@@@@@@@@@###########"))
+                puts(colored.green("####  Welcome To OCR CLI Tool  ####"))
+                puts(colored.green("##########@@@@@@@@@@@@@@###########"))
+                puts(colored.blue(""))
                 puts(colored.blue("Usage:"))
+                puts(colored.green("./preprocess_image.py <URL of image> <Output path>"))
+                puts(colored.blue("Flags: --flip"))
+                puts(colored.blue(""))
+                puts(colored.blue("########### Other Usage ############"))
+                puts(colored.blue(""))
                 puts(colored.blue("--preprocess <URL of image>"))
                 puts(colored.blue("--preprocess <URL of image> --flip"))
                 puts(colored.blue("--preprocess <URL of image> -o <Output path>"))
