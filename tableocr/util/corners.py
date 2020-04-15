@@ -34,11 +34,11 @@ def get_contours(img):
         contours = filter(lambda cont: cv2.contourArea(cont) > 10000, contours)
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[0]
     except:
-        return False
+        contours = False
     return contours
 
 
-def get_corners_from_contours(contours, C=0.1):
+def get_corners_from_contours(contours, C=0.1, recursion=0):
     """
     Get 4 corners from provided contours
     C recursively modified for exact 4 corners
@@ -49,12 +49,15 @@ def get_corners_from_contours(contours, C=0.1):
     epsilon = C * perimeter
     poly = cv2.approxPolyDP(contours, epsilon, True)
     hull = cv2.convexHull(poly)
+
     if len(hull) == 4:
         return hull
     elif len(hull) > 4:
-        return get_corners_from_contours(contours, C + 0.01)
+        if recursion > 15:
+            return hull[1:5]
+        return get_corners_from_contours(contours, C + 0.001, recursion + 1)
     else:
-        return get_corners_from_contours(contours, C - 0.01)
+        return get_corners_from_contours(contours, C - 0.001, recursion + 1)
 
 
 def get_corners_dst(corners):
