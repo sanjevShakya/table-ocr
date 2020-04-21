@@ -4,6 +4,7 @@ import collections
 
 from typing import Dict
 
+
 def is_dict(obj):
     """ Check if the object is a dict. """
     return type(obj) == type({})
