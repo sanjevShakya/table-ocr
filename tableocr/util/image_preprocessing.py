@@ -23,7 +23,8 @@ def to_gray(image):
 def binarize(image):
     """ 
     Image binarization
-    blockSize = 7
+    """
+    blockSize = 3
     C = 3
     row = image.shape[0]
     column = image.shape[1]
@@ -47,6 +48,7 @@ def binarize(image):
         image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 0
     )  # src, maxValue, adaptiveMethod, thresholdType, blockSize, C
     binarized = threshold
+    """
     return binarized
 
 
