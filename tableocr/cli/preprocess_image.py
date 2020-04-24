@@ -4,13 +4,14 @@
 import os
 import sys
 import cv2
+import numpy as np
 from pytesseract import image_to_string
 
 sys.path.insert(0, os.path.abspath(".."))
 
 from clint.arguments import Args
 from clint.textui import puts, colored, indent
-from util.image_preprocessing import preprocess, binarize, flip_image
+from util.image_preprocessing import preprocess, binarize, flip_image, rotate
 
 args = Args()
 
@@ -21,8 +22,12 @@ def preprocess_image(src, dst, flip=0):
 
     img = cv2.imread(src)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # img = binarize(img)
+    img = rotate(img, 90)
     img = preprocess(img)
+    kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+    img = cv2.filter2D(img, -1, kernel)
+    img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+    # img = binarize(img)
 
     if flip:
         img = flip_image(img)
