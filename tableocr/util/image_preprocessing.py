@@ -24,7 +24,7 @@ def binarize(image):
     """ 
     Image binarization
     """
-    blockSize = 3
+    blockSize = 5
     C = 3
     row = image.shape[0]
     column = image.shape[1]
