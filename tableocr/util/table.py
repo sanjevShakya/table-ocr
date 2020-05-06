@@ -57,6 +57,7 @@ def get_cells(im, column):
                     row = []
                 cell = im[y : y + h, x : x + w]
                 row.append(image_to_string(cell))
+        data.append(row[::-1])
 
     except:
         print("Exception occurred!")
