@@ -10,6 +10,7 @@ from pytesseract import image_to_string
 sys.path.insert(0, os.path.abspath(".."))
 
 from clint.arguments import Args
+from util.table import get_cells
 from clint.textui import puts, colored, indent
 from util.image_preprocessing import preprocess, binarize, flip_image, rotate
 
@@ -32,10 +33,15 @@ def preprocess_image(src, dst, flip=0):
     if flip:
         img = flip_image(img)
 
-    cv2.imwrite(dst, img)
+    if "--json" in str(args.flags):
+        data = get_cells(img)
+        
 
-    with indent(4, quote=" > "):
-        puts(colored.green("Output: " + dst))
+    else:
+        cv2.imwrite(dst, img)
+
+        with indent(4, quote=" > "):
+            puts(colored.green("Output: " + dst))
 
 
 if __name__ == "__main__":
