@@ -1,6 +1,7 @@
 import pytest
 from .context import objectUtil
 
+
 def test_is_dict(capsys, example_fixture):
     # pylint: disable=W0612,W0613
     # When
@@ -56,3 +57,61 @@ def test_dict_to_list_raises_exception_when_argument_is_invalid():
         ex.value.args[0]
         == "Argument must be a dictionary, invalid argument received '1'."
     )
+
+
+def test_nested_list_to_json_raises_exception_when_nestedList_argument_is_invalid():
+    """
+    Test an invalid argument such as int to nested_list_to_json
+    """
+    with pytest.raises(AttributeError) as ex:
+        objectUtil.nested_list_to_json(1, [])
+
+    assert (
+        ex.value.args[0]
+        == "Argument must be a list, invalid argument received '1'."
+    )
+
+
+def test_nested_list_to_json_raises_exception_when_columns_argument_is_invalid():
+    """
+    Test an invalid argument such as int to nested_list_to_json
+    """
+    with pytest.raises(AttributeError) as ex:
+        objectUtil.nested_list_to_json([], 1)
+
+    assert (
+        ex.value.args[0]
+        == "Argument must be a list, invalid argument received '1'."
+    )
+
+
+def test_nested_list_to_json_give_json_object_when_nestedList_and_columns_are_provided():
+    """
+    Test an valid argument for nestedList and columns
+    """
+    result = objectUtil.nested_list_to_json(
+        [
+            [1, "sanjeev", "12"],
+            [2, "shan", "14"],
+            [3, "gibbs", "14"]
+        ],
+        ["id", "name", "marks"]
+    )
+    expected = [
+        {
+            "id": 1,
+            "name": "sanjeev",
+            "marks": "12"
+        },
+        {
+            "id": 2,
+            "name": "shan",
+            "marks": "14"
+        },
+        {
+            "id": 3,
+            "name": "gibbs",
+            "marks": "14"
+        }
+    ]
+    assert(result == expected)
