@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.abspath(".."))
 
 from clint.arguments import Args
 from util.table import get_cells
+from services.format_output import nested_array_to_formated_file
 from clint.textui import puts, colored, indent
 from util.image_preprocessing import preprocess, binarize, flip_image, rotate
 
@@ -23,19 +24,24 @@ def preprocess_image(src, dst, flip=0):
 
     img = cv2.imread(src)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    img = rotate(img, 90)
+    if "--rotate" in str(args.flags):
+        img = rotate(img, 90)
     img = preprocess(img)
-    kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+    kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
     img = cv2.filter2D(img, -1, kernel)
     img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
     # img = binarize(img)
 
+    # img = flip_image(img)
     if flip:
         img = flip_image(img)
 
     if "--json" in str(args.flags):
-        data = get_cells(img)
-        
+        column = 5
+        path = os.path.expanduser("~/Desktop")
+        data = get_cells(img, column)
+        if nested_array_to_formated_file(data, data[0], "json", path):
+            print("Done! Path of json file: ",path)
 
     else:
         cv2.imwrite(dst, img)
@@ -58,7 +64,12 @@ if __name__ == "__main__":
                 puts(colored.green("##########@@@@@@@@@@@@@@###########"))
                 puts(colored.blue(""))
                 puts(colored.blue("Usage:"))
-                puts(colored.green("./preprocess_image.py <URL of image> <Output path>"))
+                puts(
+                    colored.green("./preprocess_image.py <URL of image> --json")
+                )
+                puts(
+                    colored.green("./preprocess_image.py <URL of image> <Output path>")
+                )
                 puts(colored.blue("Flags: --flip"))
                 puts(colored.blue(""))
                 puts(colored.blue("########### Other Usage ############"))

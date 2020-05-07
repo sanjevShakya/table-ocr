@@ -65,14 +65,31 @@ def crop(image, x, y, w, h):
 
 
 def flip_image(image, flag=0):
+    """ Flip image """
     return cv2.flip(image, flag)
 
 
 def rotate(image, angle=-90, center=False, scale=1):
+    """ Rotate Image """
     if not center:
         center = (image.shape[1] / 2 - 1, image.shape[0] / 2 - 1)
     mtx = cv2.getRotationMatrix2D(center, angle, scale)
     image = cv2.warpAffine(image, mtx, (image.shape[1], image.shape[0]))
+    return image
+
+
+def fix_skewness(image):
+    """ Fix skewness of image """
+    threshold = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+
+    coords = np.column_stack(np.where(threshold > 0))
+    angle = cv2.minAreaRect(coords)[-1]  # range [-90, 0)
+    if angle < -45:
+        angle = -(90 + angle)
+    else:
+        angle = -angle
+    image = rotate(image, angle=angle)
+
     return image
 
 
@@ -83,10 +100,15 @@ def preprocess(image, **kwargs):
     """
     src = kwargs.get("src", get_corners(image))
     dst, width, height = get_corners_dst(src)
+    # cv2.imshow("pre",image)
     homographic_image = homography(image, src, dst)
+    # cv2.imshow("post",homographic_image)
     image = crop(homographic_image, 0, 0, width, height)
     if kwargs.get("rotate", {}):
         image = rotate(image, kwargs.get("rotate", {}))
+
+    image = fix_skewness(image)
+    image = cv2.fastNlMeansDenoising(image, None, 7, 21, 2)
 
     return image
 

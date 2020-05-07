@@ -35,7 +35,7 @@ def get_cells(im, column):
     _, table_image = cv2.threshold(
         table_image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU
     )
-    # cv2.imshow("Table", table_image)
+    cv2.imshow("Table", table_image)
 
     contours, _ = cv2.findContours(table_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -57,16 +57,20 @@ def get_cells(im, column):
                     row = []
                 cell = im[y : y + h, x : x + w]
                 row.append(image_to_string(cell))
+                cv2.imshow("image{}".format(i), cell)
+        cv2.waitKey()
         data.append(row[::-1])
 
     except:
         print("Exception occurred!")
         pass
 
+    data = list(filter(lambda x: len(x) == column, data))
+
     return data
 
 
 if __name__ == "__main__":
-    im = cv2.imread("/home/luser/Desktop/demo-table.png")
+    im = cv2.imread("/home/luser/Desktop/main.jpg")
     data = get_cells(im, 3)
     print(data)
