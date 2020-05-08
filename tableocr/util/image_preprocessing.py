@@ -1,8 +1,12 @@
 """ Preprocessing utilities """
+import os
 import cv2
-from util.homography import homography
-from util.corners import get_corners, get_corners_dst
+import sys
 import numpy as np
+
+sys.path.insert(0, os.path.abspath("../.."))
+from tableocr.util.homography import homography
+from tableocr.util.corners import get_corners, get_corners_dst
 
 
 def to_gray(image):
@@ -17,6 +21,7 @@ def to_gray(image):
             avg = (int(pixel[0]) + int(pixel[1]) + int(pixel[2])) / 3
             image[row][column] = [avg, avg, avg]
     gray = image
+
     return gray
 
 
@@ -49,18 +54,21 @@ def binarize(image):
     )  # src, maxValue, adaptiveMethod, thresholdType, blockSize, C
     binarized = threshold
     """
+
     return binarized
 
 
 def bgr_binarize(image):
     """ BGR image binarization """
     gray = to_gray(image)
+
     return binarize(gray)
 
 
 def crop(image, x, y, w, h):
     """ Crop image to given position and size """
     image = image[y : y + h, x : x + w]
+
     return image
 
 
@@ -75,6 +83,7 @@ def rotate(image, angle=-90, center=False, scale=1):
         center = (image.shape[1] / 2 - 1, image.shape[0] / 2 - 1)
     mtx = cv2.getRotationMatrix2D(center, angle, scale)
     image = cv2.warpAffine(image, mtx, (image.shape[1], image.shape[0]))
+
     return image
 
 
@@ -108,33 +117,16 @@ def preprocess(image, **kwargs):
         image = rotate(image, kwargs.get("rotate", {}))
 
     image = fix_skewness(image)
-    image = cv2.fastNlMeansDenoising(image, None, 7, 21, 2)
+    # image = cv2.fastNlMeansDenoising(image, None, 7, 21, 3)
 
     return image
 
 
 if __name__ == "__main__":
-    """
-    Success:
-    a4-print.jpg
-    a4-120gsm-letterhead-printing.webp
-    page1.jpeg
-    Fac-simile_of_an_Old_Printed_Page.jpg
-    Failed:
-    88a98d44b63cbfa57d602bc066cfd54e.png
-    simple-invoice-template-vip-1.jpg
-    """
-    # image = cv2.imread("src/static/images/Fac-simile_of_an_Old_Printed_Page.jpg")
-    # image = cv2.imread("src/static/images/page1.jpeg")
-    # image = cv2.imread("src/static/images/simple-invoice-template-vip-1.jpg")
-    # image = cv2.imread("src/static/images/88a98d44b63cbfa57d602bc066cfd54e.png")
-    # image = cv2.imread("src/static/images/form3a.jpeg")
     image = cv2.imread("src/static/images/a4-print.jpg")
     cv2.imshow("Image", image)
 
     src = get_corners(image)
-    # src = [[0,0], [image.shape[1]-1,0], [0,image.shape[0]-1], [image.shape[1]-1,image.shape[0]-1]] #for failed case: Full screen
-    # src = [[280,90], [800,90], [200,625], [850, 630]] #for failed case: invoice
     dst, width, height = get_corners_dst(src)
 
     homographic_image = homography(image, src, dst)

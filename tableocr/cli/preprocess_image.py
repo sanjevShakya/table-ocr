@@ -9,7 +9,7 @@ from clint.arguments import Args
 from pytesseract import image_to_string
 from clint.textui import puts, colored, indent
 
-# sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath("../.."))
 
 from tableocr.util.table import get_cells
 from tableocr.services.format_output import nested_array_to_formated_file
@@ -18,7 +18,11 @@ from tableocr.util.image_preprocessing import preprocess, binarize, flip_image, 
 args = Args()
 
 
-def preprocess_image(src, dst, flip=0):
+def process_image(src, dst, flip=0):
+    """
+    Process image and save output
+    """
+
     with indent(4, quote=" > "):
         puts(colored.blue("Processing image: ", str(src)))
 
@@ -36,12 +40,26 @@ def preprocess_image(src, dst, flip=0):
     if flip:
         img = flip_image(img)
 
+    column = 6
+    path = os.path.expanduser("~/Desktop")
+    if dict(args.grouped).get("-c"):
+        column = int(dict(args.grouped).get("-c")[0])
+    if dict(args.grouped).get("-o"):
+        path = os.path.expanduser(str(dict(args.grouped).get("-o")[0]))
+
     if "--json" in str(args.flags):
-        column = 5
-        path = os.path.expanduser("~/Desktop")
         data = get_cells(img, column)
-        if nested_array_to_formated_file(data, data[0], "json", path):
-            print("Done! Path of json file: ",path)
+        if len(data) > 0 and nested_array_to_formated_file(
+            data[1:], data[0], "json", path
+        ):
+            print("Done! Path of output json file: ", path)
+
+    elif "--csv" in str(args.flags):
+        data = get_cells(img, column)
+        if len(data) > 0 and nested_array_to_formated_file(
+            data[1:], data[0], "csv", path
+        ):
+            print("Done! Path of output csv file: ", path)
 
     else:
         cv2.imwrite(dst, img)
@@ -65,7 +83,9 @@ if __name__ == "__main__":
                 puts(colored.blue(""))
                 puts(colored.blue("Usage:"))
                 puts(
-                    colored.green("./preprocess_image.py <URL of image> --json")
+                    colored.green(
+                        "./preprocess_image.py <URL of image> --json -c <No. of columns> -o <Output path>"
+                    )
                 )
                 puts(
                     colored.green("./preprocess_image.py <URL of image> <Output path>")
@@ -147,9 +167,9 @@ if __name__ == "__main__":
                         )
                     )
             elif "--flip" in str(args.flags):
-                preprocess_image(args.files[0], args.all[1], flip=1)
+                process_image(args.files[0], args.all[1], flip=1)
             else:
-                preprocess_image(args.files[0], args.all[1])
+                process_image(args.files[0], args.all[1])
 
         else:
             with indent(4, quote=" > "):
