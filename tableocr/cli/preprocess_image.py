@@ -5,15 +5,15 @@ import os
 import sys
 import cv2
 import numpy as np
-from pytesseract import image_to_string
-
-sys.path.insert(0, os.path.abspath(".."))
-
 from clint.arguments import Args
-from util.table import get_cells
-from services.format_output import nested_array_to_formated_file
+from pytesseract import image_to_string
 from clint.textui import puts, colored, indent
-from util.image_preprocessing import preprocess, binarize, flip_image, rotate
+
+# sys.path.insert(0, os.path.abspath(".."))
+
+from tableocr.util.table import get_cells
+from tableocr.services.format_output import nested_array_to_formated_file
+from tableocr.util.image_preprocessing import preprocess, binarize, flip_image, rotate
 
 args = Args()
 

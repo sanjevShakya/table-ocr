@@ -6,13 +6,13 @@ import sys
 import numpy as np
 from pytesseract import image_to_string
 
-sys.path.insert(0, os.path.abspath(".."))
-from util.image_preprocessing import binarize
+# sys.path.insert(0, os.path.abspath(".."))
+from tableocr.util.image_preprocessing import binarize
 
 
 def get_cells(im, column):
     """
-    xd
+    Get data from every cell of table as list
     """
     im = 255 - binarize(im)
 
@@ -58,7 +58,7 @@ def get_cells(im, column):
                 cell = im[y : y + h, x : x + w]
                 row.append(image_to_string(cell))
                 cv2.imshow("image{}".format(i), cell)
-        cv2.waitKey()
+        # cv2.waitKey()
         data.append(row[::-1])
 
     except:
