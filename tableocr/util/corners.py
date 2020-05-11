@@ -53,11 +53,13 @@ def get_corners_from_contours(contours, C=0.1, recursion=0):
     poly = cv2.approxPolyDP(contours, epsilon, True)
     hull = cv2.convexHull(poly)
 
+    if recursion > 5:
+        """ Retrying 5 times only to get exact 4 corners """
+        return False
+
     if len(hull) == 4:
         return hull
     elif len(hull) > 4:
-        if recursion > 15:
-            return hull[1:5]
         return get_corners_from_contours(contours, C + 0.001, recursion + 1)
     else:
         return get_corners_from_contours(contours, C - 0.001, recursion + 1)
@@ -93,15 +95,17 @@ def get_corners(image):
     Corners of image
     """
     contours = get_contours(image)
-    if contours is not False:
+    if contours is not False and 1:
         corners = get_corners_from_contours(contours)
-        corners = sorted(np.concatenate(corners).tolist())
-        corners = [corners[i] for i in [3, 2, 1, 0]]
-    else:
-        corners = [
-            [0, 0],
-            [image.shape[1] - 1, 0],
-            [0, image.shape[0] - 1],
-            [image.shape[1] - 1, image.shape[0] - 1],
-        ]
+        if corners is not False:
+            corners = sorted(np.concatenate(corners).tolist())
+            corners = [corners[i] for i in [0, 2, 1, 3]]
+
+            return corners
+    corners = [
+        [0, 0],
+        [image.shape[1] - 1, 0],
+        [0, image.shape[0] - 1],
+        [image.shape[1] - 1, image.shape[0] - 1],
+    ]
     return corners
