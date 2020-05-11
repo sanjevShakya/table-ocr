@@ -14,14 +14,24 @@
         <input type="text" name="image" value={{ file_location }} hidden/>
         <input type="number" name="rotate" title="Rotate(Degree)" placeholder="Rotate (Angle in degree) " value={{ rotate }}>
         <input type="number" name="scale" placeholder="Scale" title="Scale(*X)" step="0.002" value={{ scale }}>
+        <br>
         <input type="checkbox" id="homography" name="homograph">
         <label for="homography">Homograph</label>
+        <br>
         <button class="main-btn" type="submit"> Process </button>
     </form>
     <hr/>
     <form method="POST" action="/extract" enctype="multipart/form-data">
         <form method="POST" action="/process" enctype="multipart/form-data">
             <input type="text" name="image" value={{ file_location }} hidden/>
+            <input type="number" name="column" placeholder="Column" title="Number of columns" step="1" value="1" >
+            <label for="format">Output format: </label>
+            <select id="format" name="format">
+                <option value="text">Plain text</option>
+                <option value="json">JSON</option>
+                <option value="csv">CSV</option>
+            </select>
+            <br>
             <button class="main-btn" type="submit"> Extract </button>
     </form>
     {% endif %}

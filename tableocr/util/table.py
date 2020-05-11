@@ -61,7 +61,7 @@ def get_cells(im, column: int) -> list:
                     row = []
                 cell = im[y : y + h, x : x + w]
                 row.append(image_to_string(cell))
-                cv2.imshow("image{}".format(i), cell)
+                # cv2.imshow("image{}".format(i), cell)
         #         cv2.imwrite("/tmp/ocr-cell-{}.png".format(i),cell)
         # cv2.waitKey()
         # data.append(row[::-1])
