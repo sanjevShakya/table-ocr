@@ -35,18 +35,16 @@ def dict_to_list(dict: Dict, name_key: str = "name", value_key: str = "value"):
 
 
 def nested_list_to_json(nestedList: List, columns: List):
-    if(not is_list(nestedList)):
+    if not is_list(nestedList):
         raise AttributeError(
             "Argument must be a list, invalid argument received '{}'.".format(
                 nestedList
             )
         )
 
-    if(not is_list(columns)):
+    if not is_list(columns):
         raise AttributeError(
-            "Argument must be a list, invalid argument received '{}'.".format(
-                columns
-            )
+            "Argument must be a list, invalid argument received '{}'.".format(columns)
         )
     output = []
     for row in nestedList:

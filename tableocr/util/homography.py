@@ -49,6 +49,7 @@ def get_homography_matrix(src, dst):
 def warp_perspective(image, H):
     """
     Warp the image
+
     image = np.array(image)
     warped_image = image.dot(np.array(H))
     warped_image /= warped_image[2]
