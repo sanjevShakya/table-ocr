@@ -1,9 +1,7 @@
-
 from tableocr.util.object import dict_to_list
 
 
 class TableOcr:
-
     @staticmethod
     def run():
         print("Hello World...")
