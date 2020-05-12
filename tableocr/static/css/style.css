@@ -1,14 +1,14 @@
 body{
     margin: 0px;
     padding: 0px;
-    background-color: #000000;
-    color: #FF6347;
+    background-color: #ffffff;
+    color: #333;
     font-size: 1.25em;
     font-weight: bold;
 }
 
 a{
-    color: #FF6347;
+    color: #333;
     text-decoration: none;
 }
 
@@ -16,7 +16,7 @@ header, footer{
     text-align: center;
     max-height: 5vh;
     padding: 0.5em;
-    box-shadow: 2px 2px 7px 2px #ADFF2F;
+    box-shadow: 2px 2px 7px 2px #dfdfdf;
 }
 
 img{
@@ -25,8 +25,9 @@ img{
 
 .container{
     max-width: 620px;
-    margin: 0px auto;
+    margin: 15px auto;
     min-height: 90vh;
+    box-shadow: 2px 2px 7px 2px #dfdfdf;
 }
 
 .container form{
@@ -36,7 +37,7 @@ img{
 
 .container form input{
     padding: 1em 1.25em;
-    background-color: #b8e994;
+    background-color: #dfdfdf;
     outline: none;
     border-radius: 0.5em;
     margin: 0.5em;
@@ -47,7 +48,7 @@ input:hover{
 
 .container select {
     padding: 0.5em 0.25em;
-    background-color: #b8e994;
+    background-color: #dfdfdf;
     outline: none;
     border-radius: 0.5em;
     margin: 0.5em;
@@ -60,17 +61,17 @@ input:hover{
 
 .main-btn{
     padding: 1em 2em;
-    background-color: #b8e994;
+    background-color: #dfdfdf;
     border-radius: 1em;
     text-align: center;
     margin: 1em auto;
     max-width: 80%;
-    box-shadow: 2px 2px 4px 2px #78e08f;
+    box-shadow: 2px 2px 4px 2px #dfdfdf;
 }
 
 .main-btn:hover{
-    background-color: #78e08f;
-    box-shadow: 2px 2px 4px 2px #b8e994;
+    background-color: #dfdfdf;
+    box-shadow: 2px 2px 4px 2px #dfdfdf;
     cursor: pointer;
     color: #0a3d62;
     transition: 0.3s all;
