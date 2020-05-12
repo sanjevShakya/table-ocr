@@ -1,11 +1,19 @@
 """ Main Flask App """
 import os
-import time
 import cv2
+import sys
+import csv
+import time
+import json
+import numpy as np
 from pytesseract import image_to_string
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, redirect
-import util.preprocessing as preprocessing
+from flask import Flask, render_template, request, redirect, send_file, jsonify
+
+sys.path.insert(0, os.path.abspath(".."))
+from tableocr.util.table import get_cells
+from tableocr.util.object import nested_list_to_json
+import tableocr.util.image_preprocessing as preprocessing
 
 app = Flask(__name__)
 
@@ -41,9 +49,13 @@ def display_process():
         scale = float(request.form["scale"]) if request.form["scale"] else 1.0
         image = cv2.imread(file_location)
         if request.form.get("homograph"):
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             image = preprocessing.preprocess(image, rotate=int(rotate))
         else:
             image = preprocessing.rotate(image, rotate, scale=scale)
+        
+        kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
+        image = cv2.filter2D(image, -1, kernel)
         file_location = os.path.join(
             basedir, app.config["UPLOAD_FOLDER"], "temp", "1.png"
         )
@@ -76,7 +88,31 @@ def display_extract():
             file_location = file_location[:-1]
         image = cv2.imread(file_location)
         # image = preprocessing.to_gray(image)
-        return image_to_string(image)
+        data = get_cells(image, int(request.form.get("column", 1)))
+        if request.form.get("format") == "json" and data:
+            data = nested_list_to_json(data[1:],data[0])
+            with open("ocr-table-output.json", "w+") as file:
+                json.dump(data, file, indent=2)
+
+            return send_file('ocr-table-output.json',
+                    mimetype='text/json',
+                    attachment_filename='ocr-table-output.json',
+                    as_attachment=True)
+
+        elif request.form.get("format") == "csv" and data:
+
+            with open('ocr-table-output.csv', "w+") as csv_file:
+                csv_writer = csv.writer(csv_file, delimiter=",")
+                csv_writer.writerow(data[0])
+                for value in data[1:]:
+                    csv_writer.writerow(value)
+
+            return send_file('ocr-table-output.csv',
+                    mimetype='text/json',
+                    attachment_filename='ocr-table-output.csv',
+                    as_attachment=True)
+        else:
+            return str(data)
 
     return redirect("/")
 

@@ -45,6 +45,14 @@ input:hover{
     cursor: pointer;
 }
 
+.container select {
+    padding: 0.5em 0.25em;
+    background-color: #b8e994;
+    outline: none;
+    border-radius: 0.5em;
+    margin: 0.5em;
+}
+
 .image-container{
     max-width: 620px;
     margin: 0px auto
